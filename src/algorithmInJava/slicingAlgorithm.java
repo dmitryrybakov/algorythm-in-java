@@ -38,5 +38,60 @@ public class slicingAlgorithm {
         }
         return s;
     }
+    
+    public static int minAvgTwoSlice(int[] A) {
+    	int minpos = 0, minavg = (A[0] + A[1]) / 2;
+    	int N = A.length, N1 = N - 1, N2 = N - 2;
+    	int sumTwo, t, i;
 
+    	for (i = 0; i < N2; i += 1) {
+    		sumTwo = A[i] + A[i + 1];
+    		t = sumTwo / 2;
+    		if (minavg > t) {
+    			minavg = t;
+    			minpos = i;
+    		}
+    		t = (sumTwo + A[i + 2]) / 3;
+    		if (minavg > t) {
+    			minavg = t;
+    			minpos = i;
+    		}
+    	}
+
+    	t = (A[N2] + A[N1]) / 2;
+
+    	if (minavg > t) {
+    		minavg = t;
+    		minpos = N2;
+    	}
+
+    	return minpos;
+    }
+    
+    public static int maxSliceSum(int[] A) {
+        int maxEndingHere = A[0];
+        int maxSoFar = A[0];
+        for(int i = 1; i < A.length; i++){
+            maxEndingHere = Math.max(A[i], maxEndingHere + A[i]);
+            maxSoFar = Math.max(maxSoFar, maxEndingHere);
+        }
+        return maxSoFar;
+    }
+    
+    public static int minAbsSlice(int[] A, int[] N) {
+        int minSum = Integer.MAX_VALUE;
+        for(int startIndex = 0; startIndex < N.length; startIndex++) {
+            for(int endIndex = startIndex; endIndex < N.length; endIndex++) {
+                int sum = 0;
+                for(int i = startIndex; i <= endIndex; i++) {
+                    sum += A[i];
+                }
+                sum = Math.abs(sum);
+                if (sum < minSum) {
+                    minSum = sum;
+                }
+            }
+        }
+        return minSum;
+    }
 }
