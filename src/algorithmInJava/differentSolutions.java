@@ -2,6 +2,13 @@ package algorithmInJava;
 
 public class differentSolutions {
 	
+	//  A[0] = 0    B[0] = 500,000
+	//  A[1] = 1    B[1] = 500,000
+	//  A[2] = 2    B[2] = 0
+	//  A[3] = 2    B[3] = 0
+	//  A[4] = 3    B[4] = 0
+	//  A[5] = 5    B[5] = 20,000
+	
 	// The array is sorted in increasing way
 	public static int countMultiplicativePairs(int[] A, int[] B){
 		long scale = 1000000;
@@ -38,21 +45,28 @@ public class differentSolutions {
 		}
 	}
 	
-	public static int countMultiplicativePairsV2(int[] C){
+	
+	// 1. If 0 <= C[a] < 1, then (a,b) is multiplicative only if C[a] = 0
+	// 2. If 1 < C[a[] < 2, then C[a] / (C[a] - 1) > 2, therefore C[b] > 2. So, C[b] > C[a], but this is impossible
+	// because the array is sorted
+	// 3. If C[a] > 2 then the pair is multiplicative for any C[b] where C[b] >= C[a] / (C[a] - 1)
+	public static int countMultiplicativePairsV2(int[] A, int[] B){
 		int result = 0;
-		int len = C.length;
+		int len = A.length;
+		long scale = 1000000;
 		if(len > 1) {
 			int lo_index = 0;
 			int hi_index = len -1;
 			
 			// Skip all C[i] less than 1
+			// lo_index corresponds to b and hi_index corresponds to a
 			for(lo_index = 0; lo_index < len; lo_index++) {
-				if(C[lo_index] > 1) break;
+				if(A[lo_index] * scale + B[lo_index] > scale) break;
 			}
 
 			while(hi_index > lo_index){
-				double v = C[hi_index] / (C[hi_index] - 1);
-				while(lo_index < hi_index && C[lo_index] < v){
+				double v = A[hi_index] * scale + B[hi_index] / (A[hi_index]*scale + B[hi_index] - scale);
+				while(lo_index < hi_index && (A[lo_index]*scale + B[lo_index]) < v*scale){
 					lo_index++;
 				}
 				if(lo_index == hi_index) {
@@ -62,6 +76,11 @@ public class differentSolutions {
 				hi_index--;
 			}
 		}
+		
+		if(result > 1000000000) {
+			return 1000000000;
+		}
+		
 		return result;
 	}
 	
